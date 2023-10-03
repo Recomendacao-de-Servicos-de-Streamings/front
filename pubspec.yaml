@@ -15,7 +15,7 @@ dependencies:
         sdk: flutter
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.3
-  intl: ^0.17.0
+  intl: ^0.18.0
   flutter_modular: ^5.0.3
   dio: ^5.1.1
   hive_flutter: ^1.1.0
@@ -36,7 +36,25 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo-dev.png
-
+    - assets/images/piratas-do-caribe.jpg
+    - assets/images/gente_grande.jpg
+    - assets/images/branquelas.jpg
+    - assets/images/chamado.jpg
+    - assets/images/vingadores.jpeg
+    - assets/images/tropa.jpeg
+    - assets/images/tropa2.jpeg
+    - assets/images/gente_grande2.jpg
+    - assets/images/vingadores2.jpeg
+    - assets/images/branquelas2.jpg
+    - assets/images/logo-app.jpg
+    - assets/images/logo-app2.jpg
+    - assets/images/duromatar.jpg
+    - assets/images/avatar.jpeg
+    - assets/images/espiao.jpg
+    - assets/images/jumanji.jpg
+    - assets/images/starwars.jpg
+    - assets/images/harry.jpeg
+    - assets/images/logo-app3.jpg
 scripts:
   build: flutter pub run build_runner build
   watch: flutter pub run build_runner watch --delete-conflicting-outputs
