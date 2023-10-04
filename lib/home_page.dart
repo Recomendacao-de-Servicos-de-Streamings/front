@@ -37,11 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
             'https://image.tmdb.org/t/p/original/9Xcg7Ar4ketv4rl8yeK32yp9zQA.jpg',
         id: 22),
     Movie(
-        name: 'O Chamado 2',
-        original_title: 'The Ring Two',
+        name: 'Alien o Oitavo Passageiro',
+        original_title: 'Alien',
         imageAsset:
-            'https://image.tmdb.org/t/p/original/tRAMi4baz87h6k4o9EgAmi3dOw9.jpg',
-        id: 10320),
+            'https://image.tmdb.org/t/p/original/t0VpOjqwobTpQK2SEZpXlqt5cqY.jpg',
+        id: 348),
     Movie(
         name: "Vingadores: The Avengers",
         original_title: 'The Avengers',
@@ -67,11 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
             'https://image.tmdb.org/t/p/original/iNMP8uzV2Ing6ZCw0IICgEFVNfC.jpg',
         id: 19995),
     Movie(
-        name: "Um espião e Meio",
-        original_title: 'Central Intelligence',
+        name: "O Silêncio dos Inocentes",
+        original_title: 'Silence of the Lambs',
         imageAsset:
-            'https://image.tmdb.org/t/p/original/j24zrqp8RdDKsuvNDqrAkbBjCxC.jpg',
-        id: 302699),
+            'https://image.tmdb.org/t/p/original/paGUSTwcFrAxpGV1hSQ2wsI28id.jpg',
+        id: 274),
     Movie(
         name: "Donnie Darko",
         original_title: 'Donnie Darko',
