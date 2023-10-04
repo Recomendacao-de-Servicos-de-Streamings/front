@@ -30,8 +30,10 @@ class SelectedMoviesPage extends StatelessWidget {
           ),
           padding: EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Alinhar ao centro horizontalmente
-            crossAxisAlignment: CrossAxisAlignment.center, // Alinhar ao centro verticalmente
+            mainAxisAlignment:
+                MainAxisAlignment.center, // Alinhar ao centro horizontalmente
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Alinhar ao centro verticalmente
             children: [
               // Exibe a imagem do filme à esquerda
               Image.network(
@@ -50,9 +52,9 @@ class SelectedMoviesPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               SizedBox(height: 16), // Espaço entre o título e a descrição
-              
+
               // Container para a descrição do filme
               Container(
                 decoration: BoxDecoration(
@@ -61,7 +63,8 @@ class SelectedMoviesPage extends StatelessWidget {
                     color: Colors.orange, // Cor do contorno laranja
                     width: 2.0, // Espessura do contorno
                   ),
-                  borderRadius: BorderRadius.circular(16.0), // Borda arredondada
+                  borderRadius:
+                      BorderRadius.circular(16.0), // Borda arredondada
                 ),
                 padding: EdgeInsets.all(16.0),
                 child: Text(

@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'selected_movies_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Movie {
   final String original_title;
@@ -100,20 +104,47 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   void _navigateToSelectedMoviesPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SelectedMoviesPage(movieData: {
-          'genres': ['Crime', 'Drama'],
-          'id': 240,
-          'original_title': 'The Social Network',
-          'poster_url':
-              'https://image.tmdb.org/t/p/original/o8Y4YbPiV7TCNCEPJKv8AKTe2Gl.jpg',
-          'overview':
-              'Uma história surpreendente sobre uma nova raça de rebeldes culturais: um gênio que deflagrou uma revolução e mudou a cara da interação humana de toda uma geração, uma mudança que talvez perdure para sempre. Filmado com brutalidade emocional e humor inesperado, este filme soberbamente elaborado faz uma crônica sobre a criação do Facebook e sobre as batalhas relativas à sua propriedade após o imenso sucesso do site.'
-        }),
-      ),
-    );
+    List<String> movies = [];
+    _selectedMovies.forEach((element) {
+      movies.add(element.original_title);
+    });
+    final data = {'movies': movies};
+    Future<http.Response> getRecommendation(List<String> movies) {
+      return http.post(
+        Uri.parse("http://127.0.0.1:8000/recommendation"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS, GET, PUT, DELETE',
+          'Access-Control-Allow-Headers':
+              'Origin, X-Requested-With, Content-Type, Accept'
+        },
+        body: jsonEncode(data),
+      );
+    }
+
+    getRecommendation(movies).then((response) {
+      if (response.statusCode == 200) {
+        final number = Random().nextInt(jsonDecode(response.body).length);
+        // print(number);
+        final movie = jsonDecode(response.body)[number];
+        print(movie['original_title']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SelectedMoviesPage(movieData: {
+              'genres': movie['genres'],
+              'id': movie['id'],
+              'original_title': movie['original_title'],
+              'poster_url': movie['poster_path'],
+              'overview': movie['overview']
+            }),
+          ),
+        );
+      } else {
+        print('Failed to load movies');
+      }
+    });
   }
 
   @override
@@ -132,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           return ListTile(
             contentPadding: EdgeInsets.all(8.0),
-            leading: Image.asset(
+            leading: Image.network(
               movie.imageAsset,
               width: 80,
               height: 80,
