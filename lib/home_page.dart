@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
     getRecommendation(movies).then((response) {
       if (response.statusCode == 200) {
         final number = Random().nextInt(jsonDecode(response.body).length);
-        // print(number);
+        print(jsonDecode(response.body).length);
         final movie = jsonDecode(response.body)[number];
         print(movie['original_title']);
         Navigator.push(
