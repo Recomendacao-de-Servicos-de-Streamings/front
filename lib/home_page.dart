@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'select_movies.dart';
-import 'selected_movies_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -134,14 +131,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     getRecommendation(movies).then((response) {
       if (response.statusCode == 200) {
+        int _counter = 0;
         List<Movie> listMovies1 = [];
         var movie = jsonDecode(response.body);
         movie.forEach((element) {
           listMovies1.add(Movie.fromJson(element));
         });
+        print(_counter);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SelectMovies(listMovies1)),
+          MaterialPageRoute(
+              builder: (context) => SelectMovies(listMovies1, _counter)),
         );
       } else {
         print('Failed to load movies');

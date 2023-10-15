@@ -7,21 +7,25 @@ import 'dart:convert';
 
 import 'home_page.dart';
 
+// ignore: must_be_immutable
 class SelectMovies extends StatefulWidget {
   var movieData;
+  int _counter;
 
-  SelectMovies(this.movieData);
+  SelectMovies(this.movieData, this._counter);
 
   @override
-  _SelectMovies createState() => _SelectMovies(movieData);
+  _SelectMovies createState() => _SelectMovies(movieData, _counter);
 }
 
 class _SelectMovies extends State<SelectMovies> {
   List<Movie> _selectedMovies = [];
   List<Movie> movieData;
-  _SelectMovies(this.movieData);
+  int _counter;
+  _SelectMovies(this.movieData, this._counter);
 
   void _navigateToSelectedMoviesPage() {
+    _counter = _counter + 1;
     List<String> movies = [];
     _selectedMovies.forEach((element) {
       movies.add(element.original_title);
@@ -43,19 +47,34 @@ class _SelectMovies extends State<SelectMovies> {
 
     getRecommendation(movies).then((response) {
       if (response.statusCode == 200) {
-        final number = Random().nextInt(jsonDecode(response.body).length);
-        final movie = jsonDecode(response.body)[number];
-        Navigator.push(
+        if (_counter < 3) {
+          print(_counter);
+
+          List<Movie> listMovies1 = [];
+          var movie = jsonDecode(response.body);
+          movie.forEach((element) {
+            listMovies1.add(Movie.fromJson(element));
+          });
+          Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SelectedMoviesPage(movieData: {
-                'genres': movie['genres'],
-                'id': movie['id'],
-                'original_title': movie['original_title'],
-                'poster_url': movie['poster_path'],
-                'overview': movie['overview']
-              }),
-            ));
+                builder: (context) => SelectMovies(listMovies1, _counter)),
+          );
+        } else {
+          final number = Random().nextInt(jsonDecode(response.body).length);
+          final movie = jsonDecode(response.body)[number];
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SelectedMoviesPage(movieData: {
+                      'genres': movie['genres'],
+                      'id': movie['id'],
+                      'original_title': movie['original_title'],
+                      'poster_url': movie['poster_path'],
+                      'overview': movie['overview']
+                    })),
+          );
+        }
       } else {
         print('Failed to load movies');
       }
