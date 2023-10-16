@@ -137,7 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
         movie.forEach((element) {
           listMovies1.add(Movie.fromJson(element));
         });
-        print(_counter);
         Navigator.push(
           context,
           MaterialPageRoute(

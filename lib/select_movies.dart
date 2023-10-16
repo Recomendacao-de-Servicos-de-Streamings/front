@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'selected_movies_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'dart:convert' show utf8;
 import 'home_page.dart';
 
 // ignore: must_be_immutable
@@ -47,11 +47,10 @@ class _SelectMovies extends State<SelectMovies> {
 
     getRecommendation(movies).then((response) {
       if (response.statusCode == 200) {
-        if (_counter < 3) {
-          print(_counter);
-
+        if (_counter < 2) {
           List<Movie> listMovies1 = [];
           var movie = jsonDecode(response.body);
+
           movie.forEach((element) {
             listMovies1.add(Movie.fromJson(element));
           });
@@ -69,9 +68,9 @@ class _SelectMovies extends State<SelectMovies> {
                 builder: (context) => SelectedMoviesPage(movieData: {
                       'genres': movie['genres'],
                       'id': movie['id'],
-                      'original_title': movie['original_title'],
+                      'original_title': utf8.decode(movie['titulo'].codeUnits),
                       'poster_url': movie['poster_path'],
-                      'overview': movie['overview']
+                      'overview': utf8.decode(movie['overview'].codeUnits)
                     })),
           );
         }
@@ -94,7 +93,7 @@ class _SelectMovies extends State<SelectMovies> {
         itemBuilder: (context, index) {
           Movie movie = movieData[index];
           bool isSelected = _selectedMovies.contains(movie);
-
+          String name = utf8.decode(movie.name.codeUnits);
           return ListTile(
             contentPadding: EdgeInsets.all(8.0),
             leading: Image.network(
@@ -103,7 +102,7 @@ class _SelectMovies extends State<SelectMovies> {
               height: 80,
             ),
             title: Text(
-              movie.name,
+              name,
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
             trailing: Checkbox(
