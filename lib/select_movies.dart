@@ -11,27 +11,31 @@ import 'home_page.dart';
 class SelectMovies extends StatefulWidget {
   var movieData;
   int _counter;
-
-  SelectMovies(this.movieData, this._counter);
+  List<String> moviesAlredyShow;
+  SelectMovies(this.movieData, this._counter, this.moviesAlredyShow);
 
   @override
-  _SelectMovies createState() => _SelectMovies(movieData, _counter);
+  _SelectMovies createState() =>
+      _SelectMovies(movieData, _counter, moviesAlredyShow);
 }
 
 class _SelectMovies extends State<SelectMovies> {
   List<Movie> _selectedMovies = [];
   List<Movie> movieData;
   int _counter;
-  _SelectMovies(this.movieData, this._counter);
+  List<String> moviesAlredyShow;
+  _SelectMovies(this.movieData, this._counter, this.moviesAlredyShow);
 
   void _navigateToSelectedMoviesPage() {
     _counter = _counter + 1;
     List<String> movies = [];
     _selectedMovies.forEach((element) {
       movies.add(element.original_title);
+      moviesAlredyShow.add(element.original_title);
     });
     final data = {'movies': movies};
-    Future<http.Response> getRecommendation(List<String> movies) {
+    Future<http.Response> getRecommendation(
+        List<String> movies, List<String> moviesAlredyShow) {
       return http.post(
         Uri.parse("http://127.0.0.1:8000/recommendation"),
         headers: <String, String>{
@@ -45,19 +49,24 @@ class _SelectMovies extends State<SelectMovies> {
       );
     }
 
-    getRecommendation(movies).then((response) {
+    getRecommendation(movies, moviesAlredyShow).then((response) {
       if (response.statusCode == 200) {
+        print(moviesAlredyShow);
         if (_counter < 2) {
           List<Movie> listMovies1 = [];
           var movie = jsonDecode(response.body);
 
           movie.forEach((element) {
-            listMovies1.add(Movie.fromJson(element));
+            if (!moviesAlredyShow.contains(element['original_title'])) {
+              listMovies1.add(Movie.fromJson(element));
+            }
           });
+
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => SelectMovies(listMovies1, _counter)),
+                builder: (context) =>
+                    SelectMovies(listMovies1, _counter, moviesAlredyShow)),
           );
         } else {
           final number = Random().nextInt(jsonDecode(response.body).length);
