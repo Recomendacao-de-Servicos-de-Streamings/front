@@ -96,6 +96,7 @@ class _SelectMovies extends State<SelectMovies> {
         title: Text('Recomend.AI | Recomendador de Filmes'),
         backgroundColor: Color(0xFF222222), // Cor de fundo da AppBar
       ),
+
       backgroundColor: Color(0xFF222222), // Um tom mais claro de preto
       body: ListView.builder(
         itemCount: movieData.length,
@@ -128,7 +129,7 @@ class _SelectMovies extends State<SelectMovies> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
               ),
-              side: BorderSide(color: Colors.orange),
+              side: const BorderSide(color: Colors.orange),
               activeColor: Colors.orange,
             ),
           );
@@ -137,8 +138,8 @@ class _SelectMovies extends State<SelectMovies> {
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToSelectedMoviesPage,
         tooltip: 'Gerar um filme recomendado',
-        child: Icon(Icons.check),
         backgroundColor: Colors.orange,
+        child: const Icon(Icons.check),
       ),
     );
   }
