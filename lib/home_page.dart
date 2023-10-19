@@ -108,10 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
     _selectedMovies.forEach((element) {
       movies.add(element.original_title);
     });
-    final data = {'movies': movies};
+    final data = movies;
     Future<http.Response> getRecommendation(List<String> movies) {
       return http.post(
-        Uri.parse("http://127.0.0.1:8000/recommendation"),
+        Uri.parse("https://evned23ydaf2rtnru3cs46ptvi0xjphj.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
