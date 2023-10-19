@@ -1,7 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'selected_movies_page.dart';
+import 'select_movies.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -12,10 +10,18 @@ class Movie {
   final int id;
 
   Movie(
-      {required this.name,
+      {required this.original_title,
+      required this.name,
       required this.imageAsset,
-      required this.id,
-      required this.original_title});
+      required this.id});
+
+  factory Movie.fromJson(Map json) {
+    return Movie(
+        name: json['titulo'],
+        imageAsset: json['poster_path'],
+        id: json['id'],
+        original_title: json['original_title']);
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -26,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Movie> _selectedMovies = [];
 
-  List<Movie> _movies = [
+  final List<Movie> _movies = [
     Movie(
         name: 'O Senhor dos Anéis: A Sociedade do Anel',
         original_title: 'The Lord of the Rings: The Fellowship of the Ring',
@@ -105,11 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _navigateToSelectedMoviesPage() {
     List<String> movies = [];
-    _selectedMovies.forEach((element) {
+    List<String> moviesAlredyShow = [];
+    for (var element in _selectedMovies) {
       movies.add(element.original_title);
-    });
+      moviesAlredyShow.add(element.original_title);
+    }
+
     final data = movies;
-    Future<http.Response> getRecommendation(List<String> movies) {
+    Future<http.Response> getRecommendation(
+        List<String> movies, List<String> moviesAlredySeen) {
       return http.post(
         Uri.parse("https://evned23ydaf2rtnru3cs46ptvi0xjphj.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
@@ -123,23 +133,23 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    getRecommendation(movies).then((response) {
+    getRecommendation(movies, moviesAlredyShow).then((response) {
       if (response.statusCode == 200) {
-        final number = Random().nextInt(jsonDecode(response.body).length);
-        print(jsonDecode(response.body).length);
-        final movie = jsonDecode(response.body)[number];
-        print(movie['original_title']);
+        print(moviesAlredyShow);
+        int _counter = 0;
+        List<Movie> listMovies1 = [];
+        var movie = jsonDecode(response.body);
+        movie.forEach((element) {
+          if (!moviesAlredyShow.contains(element['original_title'])) {
+            listMovies1.add(Movie.fromJson(element));
+          }
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SelectedMoviesPage(movieData: {
-              'genres': movie['genres'],
-              'id': movie['id'],
-              'original_title': movie['original_title'],
-              'poster_url': movie['poster_path'],
-              'overview': movie['overview']
-            }),
-          ),
+              builder: (context) =>
+                  SelectMovies(listMovies1, _counter, moviesAlredyShow)),
         );
       } else {
         print('Failed to load movies');
@@ -151,10 +161,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Recomend.AI | Recomendador de Filmes'),
-        backgroundColor: Color(0xFF222222), // Cor de fundo da AppBar
+        title: const Text('Recomend.AI | Recomendador de Filmes'),
+        backgroundColor: const Color(0xFF222222), // Cor de fundo da AppBar
       ),
-      backgroundColor: Color(0xFF222222), // Um tom mais claro de preto
+      backgroundColor: const Color(0xFF222222), // Um tom mais claro de preto
       body: ListView.builder(
         itemCount: _movies.length,
         itemBuilder: (context, index) {
@@ -162,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
           bool isSelected = _selectedMovies.contains(movie);
 
           return ListTile(
-            contentPadding: EdgeInsets.all(8.0),
+            contentPadding: const EdgeInsets.all(8.0),
             leading: Image.network(
               movie.imageAsset,
               width: 80,
@@ -170,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             title: Text(
               movie.name,
-              style: TextStyle(color: Colors.white, fontSize: 24),
+              style: const TextStyle(color: Colors.white, fontSize: 24),
             ),
             trailing: Checkbox(
               value: isSelected,
@@ -186,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0),
               ),
-              side: BorderSide(color: Colors.orange),
+              side: const BorderSide(color: Colors.orange),
               activeColor: Colors.orange,
             ),
           );
@@ -195,8 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToSelectedMoviesPage,
         tooltip: 'Gerar um filme recomendado',
-        child: Icon(Icons.check),
         backgroundColor: Colors.orange,
+        child: const Icon(Icons.check),
       ),
     );
   }
