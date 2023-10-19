@@ -37,7 +37,7 @@ class _SelectMovies extends State<SelectMovies> {
     Future<http.Response> getRecommendation(
         List<String> movies, List<String> moviesAlredyShow) {
       return http.post(
-        Uri.parse("http://127.0.0.1:8000/recommendation"),
+        Uri.parse("https://evned23ydaf2rtnru3cs46ptvi0xjphj.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
@@ -77,7 +77,7 @@ class _SelectMovies extends State<SelectMovies> {
                 builder: (context) => SelectedMoviesPage(movieData: {
                       'genres': movie['genres'],
                       'id': movie['id'],
-                      'original_title': utf8.decode(movie['titulo'].codeUnits),
+                      'original_title': utf8.decode(movie['original_title'].codeUnits),
                       'poster_url': movie['poster_path'],
                       'overview': utf8.decode(movie['overview'].codeUnits)
                     })),

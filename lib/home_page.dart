@@ -17,7 +17,7 @@ class Movie {
 
   factory Movie.fromJson(Map json) {
     return Movie(
-        name: json['titulo'],
+        name: json['original_title'],
         imageAsset: json['poster_path'],
         id: json['id'],
         original_title: json['original_title']);
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
       moviesAlredyShow.add(element.original_title);
     }
 
-    final data = movies;
+    final data = {'movies': movies};
     Future<http.Response> getRecommendation(
         List<String> movies, List<String> moviesAlredySeen) {
       return http.post(
@@ -134,12 +134,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     getRecommendation(movies, moviesAlredyShow).then((response) {
+      print("Get Recommendation");
+      print(response);
+      print(response.statusCode);
+      print(movies);
+      print(jsonDecode(response.body));
       if (response.statusCode == 200) {
         print(moviesAlredyShow);
         int _counter = 0;
         List<Movie> listMovies1 = [];
         var movie = jsonDecode(response.body);
         movie.forEach((element) {
+          // print("Element: " + element);
           if (!moviesAlredyShow.contains(element['original_title'])) {
             listMovies1.add(Movie.fromJson(element));
           }
