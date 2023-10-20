@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Movie> _selectedMovies = [];
+  bool isLoading = false;
 
   final List<Movie> _movies = [
     Movie(
@@ -106,22 +107,25 @@ class _MyHomePageState extends State<MyHomePage> {
         imageAsset:
             "https://image.tmdb.org/t/p/original/r3pPehX4ik8NLYPpbDRAh0YRtMb.jpg",
         id: 550),
-    // Adicione mais filmes aqui
   ];
 
   void _navigateToSelectedMoviesPage() {
-    List<String> movies = [];
-    List<String> moviesAlredyShow = [];
+    setState(() {
+      isLoading = true;
+    });
+
+    List<int> movies = [];
+    List<int> moviesAlredyShow = [];
     for (var element in _selectedMovies) {
-      movies.add(element.original_title);
-      moviesAlredyShow.add(element.original_title);
+      movies.add(element.id);
+      moviesAlredyShow.add(element.id);
     }
 
     final data = {'movies': movies};
     Future<http.Response> getRecommendation(
-        List<String> movies, List<String> moviesAlredySeen) {
+        List<int> movies, List<int> moviesAlredySeen) {
       return http.post(
-        Uri.parse("https://evned23ydaf2rtnru3cs46ptvi0xjphj.lambda-url.us-east-1.on.aws/"),
+        Uri.parse("https://parckcgwso3qcy4dl2aateij7a0nsgxl.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
@@ -134,9 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     getRecommendation(movies, moviesAlredyShow).then((response) {
-      print("Get Recommendation");
-      print(response);
-      print(response.statusCode);
+      setState(() {
+        isLoading = false;
+      });
       print(movies);
       print(jsonDecode(response.body));
       if (response.statusCode == 200) {
@@ -168,45 +172,57 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recomend.AI | Recomendador de Filmes'),
-        backgroundColor: const Color(0xFF222222), // Cor de fundo da AppBar
+        backgroundColor: const Color(0xFF222222),
       ),
-      backgroundColor: const Color(0xFF222222), // Um tom mais claro de preto
-      body: ListView.builder(
-        itemCount: _movies.length,
-        itemBuilder: (context, index) {
-          Movie movie = _movies[index];
-          bool isSelected = _selectedMovies.contains(movie);
+      backgroundColor: const Color(0xFF222222),
+      body: Column(
+        children: [
+          Expanded(
+            child: isLoading
+                ? Center(
+                    child: CircularProgressIndicator(), // Indicador de carregamento
+                  )
+                : ListView.builder(
+                    itemCount: _movies.length,
+                    itemBuilder: (context, index) {
+                      Movie movie = _movies[index];
+                      bool isSelected = _selectedMovies.contains(movie);
 
-          return ListTile(
-            contentPadding: const EdgeInsets.all(8.0),
-            leading: Image.network(
-              movie.imageAsset,
-              width: 80,
-              height: 80,
-            ),
-            title: Text(
-              movie.name,
-              style: const TextStyle(color: Colors.white, fontSize: 24),
-            ),
-            trailing: Checkbox(
-              value: isSelected,
-              onChanged: (value) {
-                setState(() {
-                  if (value == true) {
-                    _selectedMovies.add(movie);
-                  } else {
-                    _selectedMovies.remove(movie);
-                  }
-                });
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              side: const BorderSide(color: Colors.orange),
-              activeColor: Colors.orange,
-            ),
-          );
-        },
+                      return ListTile(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        leading: Image.network(
+                          movie.imageAsset,
+                          width: 80,
+                          height: 80,
+                        ),
+                        title: Text(
+                          movie.name,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 24),
+                        ),
+                        trailing: Checkbox(
+                          value: isSelected,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value == true) {
+                                _selectedMovies.add(movie);
+                              } else {
+                                _selectedMovies.remove(movie);
+                              }
+                            });
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          side: const BorderSide(color: Colors.orange),
+                          activeColor: Colors.orange,
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          SizedBox(height: 80.0),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToSelectedMoviesPage,

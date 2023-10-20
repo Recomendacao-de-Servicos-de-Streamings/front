@@ -11,7 +11,7 @@ import 'home_page.dart';
 class SelectMovies extends StatefulWidget {
   var movieData;
   int _counter;
-  List<String> moviesAlredyShow;
+  List<int> moviesAlredyShow;
   SelectMovies(this.movieData, this._counter, this.moviesAlredyShow);
 
   @override
@@ -23,21 +23,27 @@ class _SelectMovies extends State<SelectMovies> {
   List<Movie> _selectedMovies = [];
   List<Movie> movieData;
   int _counter;
-  List<String> moviesAlredyShow;
+  List<int> moviesAlredyShow;
+  bool isLoading = false;
+
   _SelectMovies(this.movieData, this._counter, this.moviesAlredyShow);
 
   void _navigateToSelectedMoviesPage() {
+    setState(() {
+      isLoading = true;
+    });
+
     _counter = _counter + 1;
-    List<String> movies = [];
+    List<int> movies = [];
     _selectedMovies.forEach((element) {
-      movies.add(element.original_title);
-      moviesAlredyShow.add(element.original_title);
+      movies.add(element.id);
+      moviesAlredyShow.add(element.id);
     });
     final data = {'movies': movies};
     Future<http.Response> getRecommendation(
-        List<String> movies, List<String> moviesAlredyShow) {
+        List<int> movies, List<int> moviesAlredyShow) {
       return http.post(
-        Uri.parse("https://evned23ydaf2rtnru3cs46ptvi0xjphj.lambda-url.us-east-1.on.aws/"),
+        Uri.parse("https://parckcgwso3qcy4dl2aateij7a0nsgxl.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
@@ -50,8 +56,11 @@ class _SelectMovies extends State<SelectMovies> {
     }
 
     getRecommendation(movies, moviesAlredyShow).then((response) {
+      setState(() {
+        isLoading = false;
+      });
+
       if (response.statusCode == 200) {
-        print(moviesAlredyShow);
         if (_counter < 2) {
           List<Movie> listMovies1 = [];
           var movie = jsonDecode(response.body);
@@ -94,46 +103,56 @@ class _SelectMovies extends State<SelectMovies> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Recomend.AI | Recomendador de Filmes'),
-        backgroundColor: Color(0xFF222222), // Cor de fundo da AppBar
+        backgroundColor: Color(0xFF222222),
       ),
-
-      backgroundColor: Color(0xFF222222), // Um tom mais claro de preto
-      body: ListView.builder(
-        itemCount: movieData.length,
-        itemBuilder: (context, index) {
-          Movie movie = movieData[index];
-          bool isSelected = _selectedMovies.contains(movie);
-          String name = utf8.decode(movie.name.codeUnits);
-          return ListTile(
-            contentPadding: EdgeInsets.all(8.0),
-            leading: Image.network(
-              movie.imageAsset,
-              width: 80,
-              height: 80,
-            ),
-            title: Text(
-              name,
-              style: TextStyle(color: Colors.white, fontSize: 24),
-            ),
-            trailing: Checkbox(
-              value: isSelected,
-              onChanged: (value) {
-                setState(() {
-                  if (value == true) {
-                    _selectedMovies.add(movie);
-                  } else {
-                    _selectedMovies.remove(movie);
-                  }
-                });
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              side: const BorderSide(color: Colors.orange),
-              activeColor: Colors.orange,
-            ),
-          );
-        },
+      backgroundColor: Color(0xFF222222),
+      body: Column(
+        children: [
+          Expanded(
+            child: isLoading
+                ? Center(
+                    child: CircularProgressIndicator(), // Indicador de carregamento
+                  )
+                : ListView.builder(
+                    itemCount: movieData.length,
+                    itemBuilder: (context, index) {
+                      Movie movie = movieData[index];
+                      bool isSelected = _selectedMovies.contains(movie);
+                      String name = utf8.decode(movie.name.codeUnits);
+                      return ListTile(
+                        contentPadding: EdgeInsets.all(8.0),
+                        leading: Image.network(
+                          movie.imageAsset,
+                          width: 80,
+                          height: 80,
+                        ),
+                        title: Text(
+                          name,
+                          style: TextStyle(color: Colors.white, fontSize: 24),
+                        ),
+                        trailing: Checkbox(
+                          value: isSelected,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value == true) {
+                                _selectedMovies.add(movie);
+                              } else {
+                                _selectedMovies.remove(movie);
+                              }
+                            });
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          side: const BorderSide(color: Colors.orange),
+                          activeColor: Colors.orange,
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          SizedBox(height: 80.0),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToSelectedMoviesPage,

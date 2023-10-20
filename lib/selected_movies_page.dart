@@ -57,24 +57,29 @@ class SelectedMoviesPage extends StatelessWidget {
 
               // Container para a descrição do filme
               Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFF222222), // Cor de fundo preto
-                  border: Border.all(
-                    color: Colors.orange, // Cor do contorno laranja
-                    width: 2.0, // Espessura do contorno
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(16.0), // Borda arredondada
-                ),
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  overview,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+  decoration: BoxDecoration(
+    color: Color(0xFF222222), // Cor de fundo preto
+    border: Border.all(
+      color: Colors.orange, // Cor do contorno laranja
+      width: 2.0, // Espessura do contorno
+    ),
+    borderRadius: BorderRadius.circular(16.0), // Borda arredondada
+  ),
+  padding: EdgeInsets.all(16.0),
+  child: Column(
+    children: [
+      Text(
+        overview,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+        maxLines: 16, // Número máximo de linhas
+        overflow: TextOverflow.ellipsis, // Adicionar reticências no final
+      ),
+    ],
+  ),
+),
             ],
           ),
         ),
