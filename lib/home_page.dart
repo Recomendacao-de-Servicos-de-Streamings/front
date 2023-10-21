@@ -17,7 +17,7 @@ class Movie {
 
   factory Movie.fromJson(Map json) {
     return Movie(
-        name: json['original_title'],
+        name: json['titulo'],
         imageAsset: json['poster_path'],
         id: json['id'],
         original_title: json['original_title']);
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
         var movie = jsonDecode(response.body);
         movie.forEach((element) {
           // print("Element: " + element);
-          if (!moviesAlredyShow.contains(element['original_title'])) {
+          if (!moviesAlredyShow.contains(element['id'])) {
             listMovies1.add(Movie.fromJson(element));
           }
         });
