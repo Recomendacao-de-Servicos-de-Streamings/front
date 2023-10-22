@@ -35,30 +35,35 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Movie> _movies = [
     Movie(
-        name: 'O Senhor dos Anéis: A Sociedade do Anel',
-        original_title: 'The Lord of the Rings: The Fellowship of the Ring',
+        name: 'A Viagem de Chihiro',
+        original_title: "A Viagem de Chihiro",
         imageAsset:
-            'https://image.tmdb.org/t/p/original/omoMXT3Z7XrQwRZ2OGJGNWbdeEl.jpg',
-        id: 120),
+            "https://image.tmdb.org/t/p/original/e7WdOF6j3wB5kFXIEoqGXKmGaTl.jpg",
+        id: 129),
     Movie(
-        name: "Piratas do Caribe: A Maldição do Pérola Negra",
-        original_title:
-            'Pirates of the Caribbean: The Curse of the Black Pearl',
+        name: 'O Rei Leão',
+        original_title: 'The Lion King',
         imageAsset:
-            'https://image.tmdb.org/t/p/original/9Xcg7Ar4ketv4rl8yeK32yp9zQA.jpg',
-        id: 22),
+            'https://image.tmdb.org/t/p/original/wrHr8eEJYDAA7WYybyH162s4oZ4.jpg',
+        id: 420818),
     Movie(
-        name: 'Alien o Oitavo Passageiro',
-        original_title: 'Alien',
+        name: "O Menino do Pijama Listrado",
+        original_title: 'The Boy in the Striped Pyjamas',
         imageAsset:
-            'https://image.tmdb.org/t/p/original/t0VpOjqwobTpQK2SEZpXlqt5cqY.jpg',
-        id: 348),
+            'https://image.tmdb.org/t/p/original/zYRk58BJd7bLErTWlx3tVsUUbbV.jpg',
+        id: 14574),
     Movie(
-        name: "Vingadores: The Avengers",
-        original_title: 'The Avengers',
+        name: 'Sociedade dos Poetas Mortos',
+        original_title: 'Dead Poets Society',
         imageAsset:
-            'https://image.tmdb.org/t/p/original/vGIIl89vglo66yUfbuTxzNAs4y5.jpg',
-        id: 99861),
+            'https://image.tmdb.org/t/p/original/gMmbJEqEzupp4BYTcRkNsPDPvQE.jpg',
+        id: 207),
+    Movie(
+        name: "Diário de uma Paixão",
+        original_title: 'The Notebook',
+        imageAsset:
+            'https://image.tmdb.org/t/p/original/r1ttV3XhgryvmJMlBfpbzUfm6bG.jpg',
+        id: 11036),
     Movie(
         name: "As Branquelas",
         original_title: 'White Chicks',
@@ -107,6 +112,48 @@ class _MyHomePageState extends State<MyHomePage> {
         imageAsset:
             "https://image.tmdb.org/t/p/original/r3pPehX4ik8NLYPpbDRAh0YRtMb.jpg",
         id: 550),
+    Movie(
+        name: 'Gênio Indomável',
+        original_title: "Good Will Hunting",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/AlXkMIEjvk2Npc15zyL0r3P4HBH.jpg",
+        id: 489),
+    Movie(
+        name: 'Taxi Driver: Motorista de Táxi',
+        original_title: "Taxi Driver",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/wOi8s0WQZYlTDkWB46Z6p3ji5Fq.jpg",
+        id: 103),
+    Movie(
+        name: 'Batman: O Cavaleiro das Trevas',
+        original_title: "The Dark Knight",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/iGZX91hIqM9Uu0KGhd4MUaJ0Rtm.jpg",
+        id: 155),
+    Movie(
+        name: 'Titanic',
+        original_title: "Titanic",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/gpJvPuw4n8okDR88zCrU0fCncKG.jpg",
+        id: 597),
+    Movie(
+        name: 'Tropa de Elite',
+        original_title: "Tropa de Elite",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/atl4a9VFVP7JYvk4GeSgqhLOfjC.jpg",
+        id: 7347),
+    Movie(
+        name: 'Cidade de Deus',
+        original_title: "Cidade de Deus",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/gfnXixcGC060QcG6JPxN6AMdVsq.jpg",
+        id: 598),
+    Movie(
+        name: 'Tempos Modernos',
+        original_title: "Modern Times",
+        imageAsset:
+            "https://image.tmdb.org/t/p/original/sJoaoYiBgAEUWa7RfihTrMMIurD.jpg",
+        id: 3082),
   ];
 
   void _navigateToSelectedMoviesPage() {
@@ -125,7 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Future<http.Response> getRecommendation(
         List<int> movies, List<int> moviesAlredySeen) {
       return http.post(
-        Uri.parse("https://parckcgwso3qcy4dl2aateij7a0nsgxl.lambda-url.us-east-1.on.aws/"),
+        Uri.parse(
+            "https://parckcgwso3qcy4dl2aateij7a0nsgxl.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
@@ -141,8 +189,8 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         isLoading = false;
       });
-      print(movies);
-      print(jsonDecode(response.body));
+      // print(movies);
+      // print(jsonDecode(response.body));
       if (response.statusCode == 200) {
         print(moviesAlredyShow);
         int _counter = 0;
@@ -180,7 +228,8 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: isLoading
                 ? Center(
-                    child: CircularProgressIndicator(), // Indicador de carregamento
+                    child:
+                        CircularProgressIndicator(), // Indicador de carregamento
                   )
                 : ListView.builder(
                     itemCount: _movies.length,

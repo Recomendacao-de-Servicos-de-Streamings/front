@@ -43,7 +43,8 @@ class _SelectMovies extends State<SelectMovies> {
     Future<http.Response> getRecommendation(
         List<int> movies, List<int> moviesAlredyShow) {
       return http.post(
-        Uri.parse("https://parckcgwso3qcy4dl2aateij7a0nsgxl.lambda-url.us-east-1.on.aws/"),
+        Uri.parse(
+            "https://parckcgwso3qcy4dl2aateij7a0nsgxl.lambda-url.us-east-1.on.aws/"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
@@ -66,7 +67,7 @@ class _SelectMovies extends State<SelectMovies> {
           var movie = jsonDecode(response.body);
 
           movie.forEach((element) {
-            if (!moviesAlredyShow.contains(element['original_title'])) {
+            if (!moviesAlredyShow.contains(element['id'])) {
               listMovies1.add(Movie.fromJson(element));
             }
           });
@@ -86,7 +87,7 @@ class _SelectMovies extends State<SelectMovies> {
                 builder: (context) => SelectedMoviesPage(movieData: {
                       'genres': movie['genres'],
                       'id': movie['id'],
-                      'original_title': utf8.decode(movie['original_title'].codeUnits),
+                      'original_title': utf8.decode(movie['titulo'].codeUnits),
                       'poster_url': movie['poster_path'],
                       'overview': utf8.decode(movie['overview'].codeUnits)
                     })),
@@ -111,7 +112,8 @@ class _SelectMovies extends State<SelectMovies> {
           Expanded(
             child: isLoading
                 ? Center(
-                    child: CircularProgressIndicator(), // Indicador de carregamento
+                    child:
+                        CircularProgressIndicator(), // Indicador de carregamento
                   )
                 : ListView.builder(
                     itemCount: movieData.length,
